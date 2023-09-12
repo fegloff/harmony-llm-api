@@ -4,7 +4,6 @@ from flask_restx import Namespace, Resource
 from litellm import completion 
 from res import EngMsg as msg
 import openai
-import os
 import json
 
 api = Namespace('llms', description=msg.API_NAMESPACE_LLMS_DESCRIPTION)
@@ -12,8 +11,6 @@ api = Namespace('llms', description=msg.API_NAMESPACE_LLMS_DESCRIPTION)
 def data_generator(response):
     for chunk in response:
         yield f"data: {json.dumps(chunk)}\n\n"
-
-os.environ["OPENAI_API_KEY"] = os.getenv('OPENAI_KEY')
 
 @api.route('/completions') 
 class LlmsCompletionRes(Resource):

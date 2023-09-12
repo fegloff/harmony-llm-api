@@ -2,8 +2,10 @@ from flask import Flask
 from flask_cors import CORS
 import dotenv
 from apis import api
+import os
 
 dotenv.load_dotenv()
+os.environ["OPENAI_API_KEY"] = os.getenv('OPENAI_KEY')
 
 app = Flask(__name__)
 CORS(app)

@@ -1,8 +1,10 @@
 from flask import request, jsonify, Response
 from flask_restx import Namespace, Resource
-from litellm import litellm, completion
+
+from litellm import completion 
 from res import EngMsg as msg
 import openai
+import os
 import json
 
 api = Namespace('llms', description=msg.API_NAMESPACE_LLMS_DESCRIPTION)
@@ -10,6 +12,8 @@ api = Namespace('llms', description=msg.API_NAMESPACE_LLMS_DESCRIPTION)
 def data_generator(response):
     for chunk in response:
         yield f"data: {json.dumps(chunk)}\n\n"
+
+os.environ["OPENAI_API_KEY"] = os.getenv('OPENAI_KEY')
 
 @api.route('/completions') 
 class LlmsCompletionRes(Resource):
@@ -32,7 +36,6 @@ class LlmsCompletionRes(Resource):
             response = completion(**data)
             if data['stream'] == True: 
                 return Response(data_generator(response), mimetype='text/event-stream')
-            return response, 200 
         except openai.error.OpenAIError as e:
             # Handle OpenAI API errors
             error_message = str(e)
@@ -43,4 +46,5 @@ class LlmsCompletionRes(Resource):
             error_message = str(e)
             print(f"Unexpected Error: {error_message}")
             return jsonify({"error": "An unexpected error occurred."}), 500
+        return response, 200 
 

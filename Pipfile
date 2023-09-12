@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+flask-cors = "*"
+flask-restx = "*"
+gunicorn = "*"
+google-cloud-aiplatform = "*"
+cloudpickle = "*"
+vertexai = "==0.0.1"
+litellm = "==0.1.345"
+pipenv = "*"
+shell = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
+python_full_version = "3.11.5"

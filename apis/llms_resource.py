@@ -14,7 +14,11 @@ def data_generator(response):
 @api.route('/completions') 
 class LlmsCompletionRes(Resource):
     
-    def post(self): 
+    def post(self):
+        """
+        Endpoint to handle LLMs request.
+        Receives a message from the user, processes it, and returns a response from the model.
+        """ 
         data = request.json
         if data.get('stream') == "True":
             data['stream'] = True # convert to boolean

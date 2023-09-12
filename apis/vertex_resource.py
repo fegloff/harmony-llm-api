@@ -33,19 +33,13 @@ vertexai.init(project=project_id, location="us-central1")
 
 api = Namespace('vertex', description=msg.API_NAMESPACE_VERTEX_DESCRIPTION)
 
-@api.route('/')
-class TestRes(Resource):
-    def get(self):
-        return 'TEST PASSED'
-
-
 @api.route('/completions') 
 # , methods=["POST"])
 class VertexCompletionRes(Resource):
     
     def post(self): 
         """
-        Endpoint to handle chat.
+        Endpoint to handle Google's Vertex/Palm2 LLMs.
         Receives a message from the user, processes it, and returns a response from the model.
         """
         data = request.json

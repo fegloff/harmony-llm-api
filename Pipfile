@@ -16,6 +16,12 @@ pipenv = "*"
 shell = "*"
 langchain = "*"
 llama-index = "==0.8.27"
+schedule = "*"
+flask-session = "*"
+python-memcached = "*"
+chromadb = "*"
+sentence-transformers = "*"
+pytelegrambotapi = "*"
 
 [dev-packages]
 

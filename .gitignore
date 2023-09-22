@@ -4,3 +4,4 @@ res/service_account.json
 .vscode/
 __pycache__/
 litellm_uuid.txt
+data/chroma_db

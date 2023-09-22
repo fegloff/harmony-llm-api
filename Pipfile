@@ -21,6 +21,7 @@ flask-session = "*"
 python-memcached = "*"
 chromadb = "*"
 sentence-transformers = "*"
+pytelegrambotapi = "*"
 
 [dev-packages]
 

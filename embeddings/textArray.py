@@ -9,7 +9,7 @@ from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from llama_index.embeddings import LangchainEmbedding
 import logging
 import sys
-from services.telegram import bot_send_text
+from services import BotHandler
 import requests
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
@@ -26,7 +26,8 @@ class TextArray:
             enhacedPrompt = f'You will receive a web crawling text. Please get keys concepts, but try to stay within 4000 words in your response. Here is the prompt: {prompt}'
             query_engine = self.db.getQueryEngineFromUrl(chatID, url)
             promptResponse = query_engine.query(enhacedPrompt)
-            bot_send_text(bot_token, chatID, msg_id, str(promptResponse))
+            bot = BotHandler(bot_token)
+            bot.edit_message(str(promptResponse),chatID, msg_id)
         except Exception as e:
             error_message = str(e)
             print(f"Unexpected Error: {error_message}")

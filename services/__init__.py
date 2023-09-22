@@ -1,1 +1,1 @@
-from .telegram import bot_send_text
+from .telegram import BotHandler

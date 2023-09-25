@@ -5,3 +5,7 @@ res/service_account.json
 __pycache__/
 litellm_uuid.txt
 data/chroma_db
+.env.production
+.env.development
+.env.testing
+data/

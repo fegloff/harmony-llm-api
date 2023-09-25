@@ -10,7 +10,6 @@ from llama_index.embeddings import LangchainEmbedding
 import logging
 import sys
 from services import BotHandler
-import requests
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))

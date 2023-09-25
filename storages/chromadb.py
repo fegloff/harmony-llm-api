@@ -2,13 +2,13 @@ from llama_index import Document, VectorStoreIndex
 from llama_index.vector_stores import ChromaVectorStore
 from llama_index.storage.storage_context import StorageContext
 import chromadb
-
-from services.web_crawling import WebCrawling
+from services import WebCrawling
+from res import config
 
 class ChromaStorage:
 
     def __init__(self):
-        self.db = chromadb.PersistentClient(path="./data/chroma_db")
+        self.db = chromadb.PersistentClient(path=config.STORAGE_PATH)
 
     def getCollection(self, chatID):
         collection_name = f'chat{chatID}'

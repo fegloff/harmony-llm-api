@@ -2,13 +2,12 @@ from flask import request, jsonify, session, copy_current_request_context
 from flask_restx import Namespace, Resource
 
 from litellm import completion
-from embeddings.textArray import TextArray 
+from embeddings import TextArray 
 from res import EngMsg as msg
 import openai
 import json
 import threading
-
-from storages.chromadb import ChromaStorage
+from storages import ChromaStorage
 
 api = Namespace('llama-index', description=msg.API_NAMESPACE_LLMS_DESCRIPTION)
 

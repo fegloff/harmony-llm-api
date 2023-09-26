@@ -1,18 +1,14 @@
-from flask import Flask, session
-from flask_session import Session
+from flask import Flask
 from flask_cors import CORS
-from res import Config
+import dotenv
 from apis import api
 import os
 
+dotenv.load_dotenv()
+
 app = Flask(__name__)
-
-app.config.from_object(Config())
-
-sess = Session()
-api.init_app(app)
-sess.init_app(app)
 CORS(app)
+api.init_app(app)
 
 @app.route('/')
 def index():
@@ -22,7 +18,5 @@ def index():
 def health():
     return "I'm healthy", 200
 
-if __name__ == '__main__':
-    app.run(debug=True)
-    
-
+if __name__ == '__main__': 
+   app.run()

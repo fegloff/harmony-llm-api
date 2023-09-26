@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, make_response
 from flask_restx import Namespace, Resource
 from vertexai.language_models import ChatModel, ChatMessage
 from google.oauth2 import service_account
@@ -33,8 +33,7 @@ vertexai.init(project=project_id, location="us-central1")
 
 api = Namespace('vertex', description=msg.API_NAMESPACE_VERTEX_DESCRIPTION)
 
-@api.route('/completions') 
-# , methods=["POST"])
+@api.route('/completions')  # , methods=["POST"])
 class VertexCompletionRes(Resource):
     
     def post(self): 
@@ -47,6 +46,7 @@ class VertexCompletionRes(Resource):
             data['stream'] = True # convert to boolean
 
         try:
+
             if data.get('stream') == "True":
                 data['stream'] = True # convert to boolean
             # pass in data to completion function, unpack data
@@ -56,6 +56,8 @@ class VertexCompletionRes(Resource):
                 "max_output_tokens": 800,
                 "temperature": 0.2
             }
+            print('***** DATA ******')
+            print(data)
             prompt = data.get('messages')[-1]
             messages = data.get('messages')
             messages.pop()
@@ -65,10 +67,13 @@ class VertexCompletionRes(Resource):
                 message_history=history
             )
             response = chat.send_message(f"{prompt.get('content')}", **parameters)
+            print('***** RESPONSE ******')
+            print(jsonify(response))
+            print('***** RESPONSE END ******')
             # if data['stream'] == True: # use generate_responses to stream responses
             #     return Response(data_generator(response), mimetype='text/event-stream')
-            
-            return f"{response}", 200 # non streaming responses
+            # return f"{response}", 200 # non streaming responses
+            return make_response(jsonify(response), 200)
         except openai.error.OpenAIError as e:
             # Handle OpenAI API errors
             error_message = str(e)

@@ -12,6 +12,14 @@
 # below:
 .git
 .gitignore
+.venv/
+data/
+storages/
+services/
+embeddings/
+Pipfile
+Pipfile.lock
+*.fco
 
 # Python pycache:
 __pycache__/

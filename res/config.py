@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import os
 
 env = 'testing'
+#env = 'development'
 
 if env == 'testing':
     load_dotenv('.env.testing')
@@ -17,9 +18,9 @@ def generate_new_secret_key():
 class Config(object):
   DEBUG = os.getenv('DEBUG')
   TESTING = os.getenv('TESTING')
-  STORAGE_PATH = os.getenv('STORAGE_PATH')
-  SECRET_KEY = generate_new_secret_key()
-  SESSION_TYPE = os.getenv('SESSION_TYPE')
+  # STORAGE_PATH = os.getenv('STORAGE_PATH')
+  # SECRET_KEY = generate_new_secret_key()
+  # SESSION_TYPE = os.getenv('SESSION_TYPE')
   SESSION_PERMANENT = True
   SESSION_COOKIE_SAMESITE = "None"
   SESSION_COOKIE_SECURE = True

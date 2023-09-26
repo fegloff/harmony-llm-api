@@ -44,4 +44,3 @@ class LlmsCompletionRes(Resource):
             print(f"Unexpected Error: {error_message}")
             return jsonify({"error": "An unexpected error occurred."}), 500
         return response, 200 
-

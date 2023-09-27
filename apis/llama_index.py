@@ -8,7 +8,7 @@ import openai
 import json
 import threading
 
-from storages.chromadb import ChromaStorage
+from storages import ChromaStorage
 
 api = Namespace('llama-index', description=msg.API_NAMESPACE_LLMS_DESCRIPTION)
 

@@ -1,6 +1,7 @@
 import logging
 import sys
 import requests
+from res import config
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
@@ -9,7 +10,7 @@ logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 class WebCrawling:
 
     def __init__(self):
-        self.base_url = 'https://harmony-webcrawler.fly.dev/'
+        self.base_url = config.WEB_CRAWLER_HTTP 
 
     def get_web_content(self, url, username=None, password=None):
         if not url.startswith("https://"):

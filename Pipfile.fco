@@ -12,13 +12,19 @@ google-cloud-aiplatform = "*"
 cloudpickle = "*"
 vertexai = "==0.0.1"
 litellm = "==0.1.345"
+pipenv = "*"
 shell = "*"
-llama-index = "*"
+langchain = "*"
+llama-index = "==0.8.27"
+schedule = "*"
 flask-session = "*"
-telebot = "*"
+python-memcached = "*"
 chromadb = "*"
+sentence-transformers = "*"
+pytelegrambotapi = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.10"
+python_version = "3.11"
+python_full_version = "3.11.5"

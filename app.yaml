@@ -1,2 +1,3 @@
 runtime: python311
+service: llama-index
 entrypoint: gunicorn -b :$PORT main:app

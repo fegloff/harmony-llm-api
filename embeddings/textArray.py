@@ -23,8 +23,9 @@ class TextArray:
 
     def textQuery(self, url, prompt, bot_token, chatID, msg_id):
         try:
-            enhacedPrompt = f'You will receive a web crawling text. Please get keys concepts, but try to stay within 4000 words in your response. Here is the prompt: {prompt}'
+            enhacedPrompt = f'{prompt}' #You will receive a web crawling text. Here is the prompt: 
             query_engine = self.db.getQueryEngineFromUrl(chatID, url)
+            query_engine
             promptResponse = query_engine.query(enhacedPrompt)
             bot = BotHandler(bot_token)
             bot.edit_message(str(promptResponse),chatID, msg_id)

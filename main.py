@@ -11,12 +11,12 @@ def generate_new_secret_key():
 # os.urandom(24).hex() 
 
 dotenv.load_dotenv()
-os.environ["OPENAI_API_KEY"] = os.getenv('OPENAI_KEY')
+# os.environ["OPENAI_API_KEY"] = os.getenv('OPENAI_KEY')
 
 app = Flask(__name__)
 
 app.config['SECRET_KEY']=generate_new_secret_key()
-app.config['SESSION_TYPE'] = 'memcached' #'filesystem'
+# app.config['SESSION_TYPE'] = 'memcached' #'filesystem'
 app.config['SESSION_PERMANENT'] = True
 app.config.update(SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
 

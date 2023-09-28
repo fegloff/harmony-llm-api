@@ -1,13 +1,15 @@
-from flask import Flask, session
+from flask import Flask
 from flask_session import Session
 from flask_cors import CORS
-from res import Config
+import dotenv
 from apis import api
 import os
 
 def generate_new_secret_key():
     key = os.urandom(24).hex()
     return key 
+
+dotenv.load_dotenv()
 
 app = Flask(__name__)
 
@@ -30,5 +32,3 @@ def health():
 
 if __name__ == '__main__':
     app.run(debug=True)
-    
-

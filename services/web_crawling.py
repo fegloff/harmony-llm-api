@@ -1,15 +1,15 @@
 import logging
 import sys
 import requests
+from res import config
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
-
 class WebCrawling:
 
     def __init__(self):
-        self.base_url = 'https://harmony-webcrawler.fly.dev/'
+        self.base_url = config.WEB_CRAWLER_HTTP 
 
     def get_web_content(self, url, username=None, password=None):
         if not url.startswith("https://"):
@@ -47,9 +47,7 @@ class WebCrawling:
         concatenated_text = ''
         current_word_count = 0
         chunks = []
-        print(len(input_array))
         no_duplicates = list(set(self.clean_web_crawl(input_array)))
-        print(len(no_duplicates))
         
         for item in no_duplicates:
             words = item.split()
@@ -66,5 +64,4 @@ class WebCrawling:
         if concatenated_text != '':
             chunks.append(concatenated_text)
         
-        print(len(chunks))
         return chunks

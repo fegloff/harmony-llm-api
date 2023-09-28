@@ -4,10 +4,11 @@ from vertexai.language_models import ChatModel, ChatMessage
 from google.oauth2 import service_account
 import google.cloud.aiplatform as aiplatform
 from litellm import litellm
-from res import EngMsg as msg
 import openai
 import vertexai
 import json
+
+from res import EngMsg as msg
 
 with open(
     "res/service_account.json"
@@ -34,7 +35,6 @@ vertexai.init(project=project_id, location="us-central1")
 api = Namespace('vertex', description=msg.API_NAMESPACE_VERTEX_DESCRIPTION)
 
 @api.route('/completions') 
-# , methods=["POST"])
 class VertexCompletionRes(Resource):
     
     def post(self): 

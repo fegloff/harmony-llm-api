@@ -5,9 +5,15 @@ from res import Config
 from apis import api
 import os
 
+def generate_new_secret_key():
+    key = os.urandom(24).hex()
+    return key 
+
 app = Flask(__name__)
 
-app.config.from_object(Config())
+app.config['SECRET_KEY']=generate_new_secret_key()
+app.config['SESSION_PERMANENT'] = True
+app.config.update(SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
 
 sess = Session()
 api.init_app(app)

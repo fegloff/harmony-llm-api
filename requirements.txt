@@ -6,4 +6,9 @@ google-cloud-aiplatform
 cloudpickle
 vertexai==0.0.1
 litellm==0.1.345
-#0.1.388
+telebot
+chromadb==0.4.13
+flask-session
+llama-index
+shell
+langchain

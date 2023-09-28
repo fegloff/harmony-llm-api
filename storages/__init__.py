@@ -1,2 +1,1 @@
-from .chromadb import ChromaStorage
-from .pineconedb import PineconeStorage
+from .chromadb_storage import ChromaStorage

@@ -1,2 +1,3 @@
 runtime: python311
+service: llm-vector-backend
 entrypoint: gunicorn -b :$PORT main:app

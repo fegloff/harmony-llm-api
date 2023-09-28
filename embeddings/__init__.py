@@ -1,1 +1,1 @@
-from .textArray import TextArray
+from .text_array import TextArray

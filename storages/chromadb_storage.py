@@ -10,7 +10,7 @@ from res import config
 class ChromaStorage:
 
     def __init__(self):
-        self.db = chromadb.HttpClient(host=f"{config.CHROMA_SERVER_HOST}:{config.CHROMA_SERVER_HTTP_PORT}",ssl=True) #:{config.CHROMA_SERVER_HTTP_PORT}
+        self.db = chromadb.Client() # HttpClient(host=config.CHROMA_SERVER_HOST,port=config.CHROMA_SERVER_HTTP_PORT, ssl=True) #:{config.CHROMA_SERVER_HTTP_PORT}
 
     def get_collection_name(self, url, chat_id):
         input_string = f"{chat_id}:{url}"

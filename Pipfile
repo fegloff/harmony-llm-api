@@ -16,7 +16,8 @@ shell = "*"
 llama-index = "*"
 flask-session = "*"
 telebot = "*"
-chromadb = "*"
+chromadb = "==0.4.13"
+langchain = "*"
 
 [dev-packages]
 

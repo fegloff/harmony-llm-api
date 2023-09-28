@@ -17,7 +17,6 @@ class ChromaStorage:
         self.db = chromadb.Client(settings)
         print(f'******************* {self.db.get_version()} **********')
         print(f'{self.db}')
-        # .PersistentClient(path="./data/chroma_db")
 
     def getCollection(self, chatID):
         print(f'****** {self.db.list_collections()}') 

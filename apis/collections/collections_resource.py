@@ -36,7 +36,7 @@ class AddDocument(Resource):
         try:
             if (chat_id and (url or pdf)):
                 collection_name = collection_helper.get_collection_name(chat_id, url, pdf)
-                thread = threading.Thread(target=collection_helper.collection_request_handler, args=(url, pdf, collection_name))
+                thread = threading.Thread(target=collection_helper.collection_request_handler, args=(url, pdf, file_name, collection_name))
                 thread.start()
                 return make_response(jsonify({"collectionName": f"{collection_name}"}), 200)
             else:
@@ -52,7 +52,7 @@ class AddDocument(Resource):
         If collection exists, returns indexing price
         """
         try:
-            data = request.json
+            data = request.args
             collection_name = data.get('collectionName')
             if (collection_name):
                 collection = collection_helper.get_collection(collection_name)

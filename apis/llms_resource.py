@@ -1,6 +1,7 @@
-from flask import request, jsonify, Response
+from flask import request, jsonify, Response, make_response
 from flask_restx import Namespace, Resource
-from litellm import completion 
+from litellm import completion
+from openai.error import OpenAIError
 import openai
 import json
 
@@ -33,7 +34,7 @@ class LlmsCompletionRes(Resource):
             response = completion(**data)
             if data['stream'] == True: 
                 return Response(data_generator(response), mimetype='text/event-stream')
-        except openai.error.OpenAIError as e:
+        except OpenAIError as e:
             # Handle OpenAI API errors
             error_message = str(e)
             print(f"OpenAI API Error: {error_message}")
@@ -43,5 +44,6 @@ class LlmsCompletionRes(Resource):
             error_message = str(e)
             print(f"Unexpected Error: {error_message}")
             return jsonify({"error": "An unexpected error occurred."}), 500
-        return response, 200 
+        # return response, 200
+        return make_response(jsonify(response), 200)
 

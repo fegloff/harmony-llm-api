@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 import os
 
-env = 'testing'
+env = 'development'
 
 if env == 'testing':
     load_dotenv('.env.testing')

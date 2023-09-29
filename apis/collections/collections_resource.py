@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, make_response
 from flask_restx import Namespace, Resource
 import json
 import threading
@@ -47,10 +47,21 @@ class AddDocument(Resource):
         """
         try:
             data = request.json
-            id = data.get('collectionName')
-            if (id):
-                print(f'hi TBD {id}')
-                return "0", 400
+            collection_name = data.get('collectionName')
+            if (collection_name):
+                collection = collection_helper.get_collection(collection_name)
+                if (collection):
+                    embeddings_number = collection.count()
+                    print(f'******* {embeddings_number}')
+                    response = {
+                        "price": embeddings_number * 0.05 # TBD
+                    }
+                    print(f'hi TBD {id}')
+                    return make_response(jsonify(response), 200)
+                response = {
+                    "price": -1
+                }
+                return make_response(jsonify(response), 200)
             else:
                 return "Bad request, parameters missing", 400    
         except Exception as e:

@@ -1,10 +1,6 @@
 import logging
-import sys
 import requests
 from res import config
-
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
 class WebCrawling:
 

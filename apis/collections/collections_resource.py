@@ -87,14 +87,15 @@ class WebCrawlerTextRes(Resource):
         data = request.json
         prompt = data.get('prompt')
         collection_name = data.get('collectionName')
-        conversation = data.get('conversation')
+        conversation = [] # data.get('conversation')
+        print('&&&&&&&', collection_name)
         try:
             if collection_name:
                 response = collection_helper.collection_query(collection_name, prompt, conversation)
                 print(f"***** RESPONSE: {response}")
                 return make_response(jsonify(response), 200)
             else:
-                return "Bad request, parameters missing", 400
+                return make_response(jsonify(response), 200)
         except Exception as e:
             error_message = str(e)
             print(f"Unexpected Error: {error_message}")

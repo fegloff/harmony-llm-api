@@ -30,4 +30,7 @@ class CollectionHelper:
         chat_engine = index.as_chat_engine(chat_mode="condense_question")
         promptResponse = chat_engine.chat(prompt)
         print(f':::::::::::: {promptResponse}')
-        return str(promptResponse)
+        return {
+            "completion": str(promptResponse),
+            "price": 0.02
+        }

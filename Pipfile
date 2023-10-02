@@ -17,6 +17,7 @@ flask-session = "*"
 telebot = "*"
 chromadb = "==0.4.13"
 langchain = "*"
+"pdfminer.six" = "*"
 
 [dev-packages]
 

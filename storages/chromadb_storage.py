@@ -43,6 +43,16 @@ class ChromaStorage:
         index = VectorStoreIndex.from_documents(
             documents, storage_context=storage_context)
         print(f'****** {index.summary}')
+    
+    def store_text_array(self, text_array, collection_name):
+        collection = self.get_collection(collection_name)
+        documents = [Document(text=t) for t in text_array]
+        vector_store = ChromaVectorStore(chroma_collection=collection)
+        storage_context = StorageContext.from_defaults(
+            vector_store=vector_store)
+        index = VectorStoreIndex.from_documents(
+            documents, storage_context=storage_context)
+        print(f'****** {index.summary}')
 
     def get_vector_index(self, collection_name):
         collection = self.get_collection(collection_name)

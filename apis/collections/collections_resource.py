@@ -52,7 +52,7 @@ class AddDocument(Resource):
         If collection exists, returns indexing price
         """
         try:
-            data = request.args
+            data = request.json
             collection_name = data.get('collectionName')
             if (collection_name):
                 collection = collection_helper.get_collection(collection_name)

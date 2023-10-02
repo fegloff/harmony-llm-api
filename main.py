@@ -31,4 +31,9 @@ def health():
     return "I'm healthy", 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    print('FCO FCO FCO ', os.getenv('FLASK_ENV'))
+    if os.getenv('FLASK_ENV') != 'development':
+        from waitress import serve
+        serve(app, host="0.0.0.0", port=8080)
+    else:
+        app.run(debug=True)

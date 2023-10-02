@@ -1,4 +1,4 @@
-flask
+flask==2.3.3
 flask_cors
 flask-restx
 gunicorn
@@ -7,8 +7,12 @@ cloudpickle
 vertexai==0.0.1
 litellm==0.1.793
 telebot
-chromadb==0.4.13
 flask-session
 llama-index
 shell
 langchain
+flask-session
+telebot
+chromadb==0.4.3
+shapely
+waitress

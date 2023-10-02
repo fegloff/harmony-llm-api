@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-flask = "*"
+flask = "==2.3.3"
 flask-cors = "*"
 flask-restx = "*"
 gunicorn = "*"
@@ -15,8 +15,10 @@ shell = "*"
 llama-index = "*"
 flask-session = "*"
 telebot = "*"
-chromadb = "==0.4.13"
+chromadb = "==0.4.3"
 langchain = "*"
+shapely = "*" 
+waitress = "*"
 
 [dev-packages]
 

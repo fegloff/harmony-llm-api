@@ -3,6 +3,7 @@ from llama_index import Document, VectorStoreIndex
 from llama_index.vector_stores import ChromaVectorStore
 from llama_index.storage.storage_context import StorageContext
 import chromadb
+import chromadb.config
 import hashlib
 
 from services import WebCrawling
@@ -10,7 +11,10 @@ from res import config
 class ChromaStorage:
 
     def __init__(self):
-        self.db = chromadb.Client() # HttpClient(host=config.CHROMA_SERVER_HOST,port=config.CHROMA_SERVER_HTTP_PORT, ssl=True) #:{config.CHROMA_SERVER_HTTP_PORT}
+        _client_settings = chromadb.config.Settings(
+            persist_directory="./chroma",
+            is_persistent=True)
+        self.db = chromadb.Client(_client_settings)
 
     def get_collection_name(self, chat_id, url, pdf_url):
         text = url if url is not None else pdf_url

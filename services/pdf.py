@@ -2,7 +2,7 @@ import requests
 from io import BytesIO
 from pdfminer.high_level import extract_text
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from timer_decorator import timer
+from .timer_decorator import timer
 
 class PdfHandler:
     # def __init__(self):
@@ -13,7 +13,6 @@ class PdfHandler:
         data = self.get_pdf_from_url(pdf_url)
         text = extract_text(data)
         return self.chunk_text(text)
-
 
     # Fetches a PDF from a given URL and return it as a BytesIO object
     def get_pdf_from_url(self, url: str) -> BytesIO:

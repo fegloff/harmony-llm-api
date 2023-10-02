@@ -27,23 +27,24 @@ class AddDocument(Resource):
         chat_id = data.get('chatId')
         url = data.get('url')
         # pdf looks as follows:
-        # pdf {
-        #   name: "file_name.pdf"
+        # "pdf" {
+        #   name: "file_name.pdf",
         #   url: "file_url"
         # }
         pdf = data.get('pdf')
+
         try:
             if (chat_id and (url or pdf)):
                 collection_name = collection_helper.get_collection_name(chat_id, url, pdf)
                 thread = threading.Thread(target=collection_helper.collection_request_handler, args=(url, pdf, collection_name))
                 thread.start()
-                return f'{collection_name}', 200
+                return make_response(jsonify({"collectionName": f"{collection_name}"}), 200)
             else:
-                return "Bad request, parameters missing", 400
+                return make_response(jsonify({"error": "Bad request, parameters missing"}), 400)
         except Exception as e:
             error_message = str(e)
             print(f"Unexpected Error: {error_message}")
-            return jsonify({"error": "An unexpected error occurred."}), 500
+            return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
 
     def get(self):
         """
@@ -72,8 +73,7 @@ class AddDocument(Resource):
         except Exception as e:
             error_message = str(e)
             print(f"Unexpected Error: {error_message}")
-            return jsonify({"error": "An unexpected error occurred."}), 500
-
+            return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
 
 @api.route('/query')
 class WebCrawlerTextRes(Resource):
@@ -91,13 +91,14 @@ class WebCrawlerTextRes(Resource):
         try:
             if collection_name:
                 response = collection_helper.collection_query(collection_name, prompt, conversation)
-                return response, 200
+                print(f"***** RESPONSE: {response}")
+                return make_response(jsonify(response), 200)
             else:
                 return "Bad request, parameters missing", 400
         except Exception as e:
             error_message = str(e)
             print(f"Unexpected Error: {error_message}")
-            return jsonify({"error": "An unexpected error occurred."}), 500
+            return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
         
 # @api.route('/text')
 # class WebCrawlerTextRes(Resource):

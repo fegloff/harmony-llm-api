@@ -9,8 +9,8 @@ from services import WebCrawling
 from res import config
 class ChromaStorage:
 
-    def __init__(self):
-        self.db = chromadb.Client() # HttpClient(host=config.CHROMA_SERVER_HOST,port=config.CHROMA_SERVER_HTTP_PORT, ssl=True) #:{config.CHROMA_SERVER_HTTP_PORT}
+    def __init__(self, settings):
+        self.db = chromadb.Client(settings) # HttpClient(host=config.CHROMA_SERVER_HOST,port=config.CHROMA_SERVER_HTTP_PORT, ssl=True) #:{config.CHROMA_SERVER_HTTP_PORT}
 
     def get_collection_name(self, chat_id, url, pdf):
         if url:

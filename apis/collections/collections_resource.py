@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, make_response
 from flask_restx import Namespace, Resource
 import json
 import threading
@@ -26,11 +26,12 @@ class AddDocument(Resource):
         data = request.json
         chat_id = data.get('chatId')
         url = data.get('url')
-        pdf = data.get('pdf')
+        pdf_url = data.get('pdfUrl')
+        file_name = data.get('fileName')
         try:
-            if (chat_id and (url or pdf)):
-                collection_name = collection_helper.get_collection_name(chat_id, url, pdf)
-                thread = threading.Thread(target=collection_helper.collection_request_handler, args=(url, pdf, collection_name))
+            if (chat_id and (url or pdf_url)):
+                collection_name = collection_helper.get_collection_name(chat_id, url, pdf_url)
+                thread = threading.Thread(target=collection_helper.collection_request_handler, args=(url, pdf_url, file_name, collection_name))
                 thread.start()
                 return f'{collection_name}', 200
             else:
@@ -46,11 +47,22 @@ class AddDocument(Resource):
         If collection exists, returns indexing price
         """
         try:
-            data = request.json
-            id = data.get('collectionName')
-            if (id):
-                print(f'hi TBD {id}')
-                return "0", 400
+            data = request.args
+            collection_name = data.get('collectionName')
+            if (collection_name):
+                collection = collection_helper.get_collection(collection_name)
+                if (collection):
+                    embeddings_number = collection.count()
+                    print(f'******* {embeddings_number}')
+                    response = {
+                        "price": embeddings_number * 0.05 # TBD
+                    }
+                    print(f'hi TBD {id}')
+                    return make_response(jsonify(response), 200)
+                response = {
+                    "price": -1
+                }
+                return make_response(jsonify(response), 200)
             else:
                 return "Bad request, parameters missing", 400    
         except Exception as e:
@@ -71,13 +83,14 @@ class WebCrawlerTextRes(Resource):
         data = request.json
         prompt = data.get('prompt')
         collection_name = data.get('collectionName')
-        conversation = data.get('conversation')
+        conversation = [] # data.get('conversation')
+        print('&&&&&&&', collection_name)
         try:
             if collection_name:
                 response = collection_helper.collection_query(collection_name, prompt, conversation)
                 return response, 200
             else:
-                return "Bad request, parameters missing", 400
+                return make_response(jsonify(response), 200)
         except Exception as e:
             error_message = str(e)
             print(f"Unexpected Error: {error_message}")

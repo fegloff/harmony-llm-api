@@ -13,26 +13,21 @@ class ChromaStorage:
         self.db = chromadb.Client() # HttpClient(host=config.CHROMA_SERVER_HOST,port=config.CHROMA_SERVER_HTTP_PORT, ssl=True) #:{config.CHROMA_SERVER_HTTP_PORT}
 
     def get_collection_name(self, chat_id, url, pdf):
-        if (url):
-            hashed = hashlib.md5(url.encode()).hexdigest()
-            if not hashed[0].isalnum():
-                hashed = 'a' + hashed[1:]
-            if not hashed[-1].isalnum():
-                hashed = hashed[:-1] + 'a'
-            valid_characters = ''.join(c for c in hashed if c.isalnum() or c in ('_', '-'))
-            return f"chat{chat_id}-{valid_characters}"
-        elif (pdf):
-            # tbd 
-            # get file name from pdf file
-            # hashed = hashlib.md5(file_name.encode()).hexdigest()
-            # if not hashed[0].isalnum():
-            #     hashed = 'a' + hashed[1:]
-            # if not hashed[-1].isalnum():
-            #     hashed = hashed[:-1] + 'a'
-            # valid_characters = ''.join(c for c in hashed if c.isalnum() or c in ('_', '-'))
-            # return f"chat{chat_id}-{valid_characters}"
-            print('TBD')
+        if url:
+            return self.generate_collection_name(chat_id, url)
+        if pdf and pdf.get("name"):
+            return self.generate_collection_name(chat_id, pdf["name"])
         return f"chat{chat_id}"
+
+    def generate_collection_name(self, chat_id, str_input):
+        hashed = hashlib.md5(str_input.encode()).hexdigest()
+        if not hashed[0].isalnum():
+            hashed = 'a' + hashed[1:]
+        if not hashed[-1].isalnum():
+            hashed = hashed[:-1] + 'a'
+        valid_characters = ''.join(c for c in hashed if c.isalnum() or c in ('_', '-'))
+        return f"chat{chat_id}-{valid_characters}"
+
 
     def get_collection(self, collection_name):
         collection = self.db.get_or_create_collection(

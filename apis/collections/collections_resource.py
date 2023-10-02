@@ -26,6 +26,11 @@ class AddDocument(Resource):
         data = request.json
         chat_id = data.get('chatId')
         url = data.get('url')
+        # pdf looks as follows:
+        # pdf {
+        #   name: "file_name.pdf"
+        #   url: "file_url"
+        # }
         pdf = data.get('pdf')
         try:
             if (chat_id and (url or pdf)):

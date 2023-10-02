@@ -17,6 +17,10 @@ class CollectionHelper:
             self.db.store_text_array_from_url(text_array,collection_name)
         elif (pdf):
             # TO BE DEFINED
+            # TODO: 
+            # Chunking and processing logic
+            # Storing processed chunks to db 
+            
             # documents = [Document(text=t) for t in pdfNodes]
             print('TBD pdf')
 

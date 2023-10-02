@@ -26,20 +26,26 @@ class AddDocument(Resource):
         data = request.json
         chat_id = data.get('chatId')
         url = data.get('url')
-        pdf_url = data.get('pdfUrl')
-        file_name = data.get('fileName')
+        
+        # pdf looks as follows:
+        # "pdf" {
+        #   name: "file_name.pdf",
+        #   url: "file_url"
+        # }
+        
+        pdf = data.get('pdf')
         try:
             if (chat_id and (url or pdf_url)):
                 collection_name = collection_helper.get_collection_name(chat_id, url, pdf_url)
                 thread = threading.Thread(target=collection_helper.collection_request_handler, args=(url, pdf_url, file_name, collection_name))
                 thread.start()
-                return f'{collection_name}', 200
+                return make_response(jsonify({"collectionName": f"{collection_name}"}), 200)
             else:
-                return "Bad request, parameters missing", 400
+                return make_response(jsonify({"error": "Bad request, parameters missing"}), 400)
         except Exception as e:
             error_message = str(e)
             print(f"Unexpected Error: {error_message}")
-            return jsonify({"error": "An unexpected error occurred."}), 500
+            return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
 
     def get(self):
         """
@@ -47,7 +53,7 @@ class AddDocument(Resource):
         If collection exists, returns indexing price
         """
         try:
-            data = request.args
+            data = request.json
             collection_name = data.get('collectionName')
             if (collection_name):
                 collection = collection_helper.get_collection(collection_name)
@@ -68,8 +74,7 @@ class AddDocument(Resource):
         except Exception as e:
             error_message = str(e)
             print(f"Unexpected Error: {error_message}")
-            return jsonify({"error": "An unexpected error occurred."}), 500
-
+            return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
 
 @api.route('/query')
 class WebCrawlerTextRes(Resource):
@@ -88,13 +93,14 @@ class WebCrawlerTextRes(Resource):
         try:
             if collection_name:
                 response = collection_helper.collection_query(collection_name, prompt, conversation)
-                return response, 200
+                print(f"***** RESPONSE: {response}")
+                return make_response(jsonify(response), 200)
             else:
                 return make_response(jsonify(response), 200)
         except Exception as e:
             error_message = str(e)
             print(f"Unexpected Error: {error_message}")
-            return jsonify({"error": "An unexpected error occurred."}), 500
+            return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
         
 # @api.route('/text')
 # class WebCrawlerTextRes(Resource):

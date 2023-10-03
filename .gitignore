@@ -11,3 +11,4 @@ data/chroma_db
 data/
 res/service_account.json
 chroma/
+venv/

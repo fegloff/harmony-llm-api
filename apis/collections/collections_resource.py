@@ -1,4 +1,4 @@
-from flask import request, jsonify, make_response
+from flask import request, jsonify, make_response, current_app as app
 from flask_restx import Namespace, Resource
 import json
 import threading
@@ -23,6 +23,7 @@ class AddDocument(Resource):
         Receives any document (URL, PDF, voice) and creates a collection (Vector index).
         Returns a collection ID
         """
+        app.logger.info('handling document')
         data = request.json
         chat_id = data.get('chatId')
         url = data.get('url')
@@ -37,7 +38,7 @@ class AddDocument(Resource):
                 return "Bad request, parameters missing", 400
         except Exception as e:
             error_message = str(e)
-            print(f"Unexpected Error: {error_message}")
+            app.logger.error(f"Unexpected Error: {error_message}")
             return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
 
     def get(self):
@@ -66,7 +67,7 @@ class AddDocument(Resource):
                 return "Bad request, parameters missing", 400    
         except Exception as e:
             error_message = str(e)
-            print(f"Unexpected Error: {error_message}")
+            app.logger.error(f"Unexpected Error: {error_message}")
             return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
 
 
@@ -92,7 +93,7 @@ class WebCrawlerTextRes(Resource):
                 return make_response(jsonify({"error": "Bad request"}), 400)
         except Exception as e:
             error_message = str(e)
-            print(f"Unexpected Error: {error_message}")
+            app.logger.error(f"Unexpected Error: {error_message}")
             if (e.args[2] == 404):
                 return e.args[1], 404
             else:

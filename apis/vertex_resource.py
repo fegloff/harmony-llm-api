@@ -1,4 +1,4 @@
-from flask import request, jsonify, make_response
+from flask import request, jsonify, make_response, current_app as app
 from flask_restx import Namespace, Resource
 from vertexai.language_models import ChatModel, ChatMessage
 from google.oauth2 import service_account
@@ -7,7 +7,6 @@ from litellm import litellm
 import openai
 import vertexai
 import json
-import logging
 
 from res import EngMsg as msg
 
@@ -48,7 +47,7 @@ class VertexCompletionRes(Resource):
             data['stream'] = True # convert to boolean
 
         try:
-            logging.info('handling chat-bison request')
+            app.logger.info('handling chat-bison request')
             if data.get('stream') == "True":
                 data['stream'] = True # convert to boolean
             # pass in data to completion function, unpack data
@@ -75,10 +74,10 @@ class VertexCompletionRes(Resource):
         except openai.error.OpenAIError as e:
             # Handle OpenAI API errors
             error_message = str(e)
-            print(f"OpenAI API Error: {error_message}")
+            app.logger.error(f"OpenAI API Error: {error_message}")
             return make_response(jsonify({"error": error_message}), 500)
         except Exception as e:
             # Handle other unexpected errors
             error_message = str(e)
-            print(f"Unexpected Error: {error_message}")
+            app.logger.error(f"Unexpected Error: {error_message}")
             return make_response(jsonify({"error": "An unexpected error occurred."}), 500)

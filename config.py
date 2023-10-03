@@ -26,11 +26,5 @@ class Config(object):
 
 config = Config()
 
-# print(config.CHROMA_SERVER_HOST)
-# print(config.CHROMA_SERVER_HTTP_PORT)
-# print(config.DEBUG)
-# print(config.SECRET_KEY)
-# print(config.TESTING)
-# print(config.WEB_CRAWLER_HTTP)
 
 

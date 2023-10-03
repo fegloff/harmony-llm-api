@@ -7,6 +7,7 @@ from litellm import litellm
 import openai
 import vertexai
 import json
+import logging
 
 from res import EngMsg as msg
 
@@ -47,6 +48,7 @@ class VertexCompletionRes(Resource):
             data['stream'] = True # convert to boolean
 
         try:
+            logging.info('handling chat-bison request')
             if data.get('stream') == "True":
                 data['stream'] = True # convert to boolean
             # pass in data to completion function, unpack data
@@ -74,9 +76,9 @@ class VertexCompletionRes(Resource):
             # Handle OpenAI API errors
             error_message = str(e)
             print(f"OpenAI API Error: {error_message}")
-            return jsonify({"error": error_message}), 500
+            return make_response(jsonify({"error": error_message}), 500)
         except Exception as e:
             # Handle other unexpected errors
             error_message = str(e)
             print(f"Unexpected Error: {error_message}")
-            return jsonify({"error": "An unexpected error occurred."}), 500
+            return make_response(jsonify({"error": "An unexpected error occurred."}), 500)

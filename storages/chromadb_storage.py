@@ -16,9 +16,8 @@ class ChromaStorage:
             is_persistent=True)
         self.db = chromadb.Client() #  _client_settings)
 
-    def get_collection_name(self, chat_id, url, pdf_url):
-        text = url if url is not None else pdf_url
-        hashed = hashlib.md5(text.encode()).hexdigest()
+    def get_collection_name(self, chat_id, url):
+        hashed = hashlib.md5(url.encode()).hexdigest()
         if not hashed[0].isalnum():
             hashed = 'a' + hashed[1:]
         if not hashed[-1].isalnum():
@@ -39,7 +38,6 @@ class ChromaStorage:
             vector_store=vector_store)
         index = VectorStoreIndex.from_documents(
             documents, storage_context=storage_context)
-        print(f'****** {index.summary}')
 
     def get_vector_index(self, collection_name):
         collection = self.get_collection(collection_name)

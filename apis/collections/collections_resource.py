@@ -2,7 +2,7 @@ from flask import request, jsonify, make_response
 from flask_restx import Namespace, Resource
 import json
 import threading
-
+from llama_index.llms.base import ChatMessage
 from res import EngMsg as msg
 from storages import chromadb
 from .collections_helper import CollectionHelper
@@ -26,12 +26,11 @@ class AddDocument(Resource):
         data = request.json
         chat_id = data.get('chatId')
         url = data.get('url')
-        pdf_url = data.get('pdfUrl')
         file_name = data.get('fileName')
         try:
-            if (chat_id and (url or pdf_url)):
-                collection_name = collection_helper.get_collection_name(chat_id, url, pdf_url)
-                thread = threading.Thread(target=collection_helper.collection_request_handler, args=(url, pdf_url, file_name, collection_name))
+            if (chat_id and url):
+                collection_name = collection_helper.get_collection_name(chat_id, url)
+                thread = threading.Thread(target=collection_helper.collection_request_handler, args=(url, file_name, collection_name))
                 thread.start()
                 return f'{collection_name}', 200
             else:
@@ -39,7 +38,7 @@ class AddDocument(Resource):
         except Exception as e:
             error_message = str(e)
             print(f"Unexpected Error: {error_message}")
-            return jsonify({"error": "An unexpected error occurred."}), 500
+            return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
 
     def get(self):
         """
@@ -68,7 +67,7 @@ class AddDocument(Resource):
         except Exception as e:
             error_message = str(e)
             print(f"Unexpected Error: {error_message}")
-            return jsonify({"error": "An unexpected error occurred."}), 500
+            return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
 
 
 @api.route('/query')
@@ -83,18 +82,22 @@ class WebCrawlerTextRes(Resource):
         data = request.json
         prompt = data.get('prompt')
         collection_name = data.get('collectionName')
-        conversation = [] # data.get('conversation')
-        print('&&&&&&&', collection_name)
+        conversation = data.get('conversation')
+        chat_history = [ChatMessage(content=item.get('content'), role=item.get('role')) for item in conversation]
         try:
             if collection_name:
-                response = collection_helper.collection_query(collection_name, prompt, conversation)
-                return response, 200
-            else:
+                response = collection_helper.collection_query(collection_name, prompt, chat_history) 
                 return make_response(jsonify(response), 200)
+            else:
+                return make_response(jsonify({"error": "Bad request"}), 400)
         except Exception as e:
             error_message = str(e)
             print(f"Unexpected Error: {error_message}")
-            return jsonify({"error": "An unexpected error occurred."}), 500
+            if (e.args[2] == 404):
+                return e.args[1], 404
+            else:
+                return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
+            
         
 # @api.route('/text')
 # class WebCrawlerTextRes(Resource):

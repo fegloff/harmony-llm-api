@@ -3,7 +3,6 @@ import os
 
 env = 'production'
 
-print('ENV VARIABLE +++++++++++', env)
 if env == 'testing':
     load_dotenv(find_dotenv('.env.testing'))
 elif env == 'development':

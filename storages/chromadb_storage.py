@@ -7,14 +7,14 @@ import chromadb.config
 import hashlib
 
 from services import WebCrawling
-from res import config
+from config import config
 class ChromaStorage:
 
     def __init__(self):
         _client_settings = chromadb.config.Settings(
             persist_directory="./chroma",
             is_persistent=True)
-        self.db = chromadb.Client(_client_settings)
+        self.db = chromadb.Client() #  _client_settings)
 
     def get_collection_name(self, chat_id, url, pdf_url):
         text = url if url is not None else pdf_url

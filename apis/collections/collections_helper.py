@@ -31,7 +31,7 @@ class CollectionHelper:
     def collection_query(self, collection_name, prompt, conversation):
         index = self.db.get_vector_index(collection_name)
         if index:
-            chat_engine = index.as_chat_engine(chat_mode=ChatMode.REACT) # "condense_question")
+            chat_engine = index.as_chat_engine(chat_mode=ChatMode.CONTEXT) # "condense_question")
             # print(conversation)
             promptResponse = chat_engine.chat(prompt,chat_history=conversation) # chat_history=conversation
             return {

@@ -5,16 +5,18 @@ from llama_index.storage.storage_context import StorageContext
 import chromadb
 import chromadb.config
 import hashlib
+import os
 
-from services import WebCrawling
-from config import config
 class ChromaStorage:
 
     def __init__(self):
-        _client_settings = chromadb.config.Settings(
-            persist_directory="./chroma",
-            is_persistent=True)
-        self.db = chromadb.Client() #  _client_settings)
+        path = '/app/data' # os.getcwd()
+        # _client_settings = chromadb.config.Settings(
+        #     persist_directory=f"{path}/chroma",
+        #     is_persistent=True)
+        self.db = chromadb.PersistentClient(f"{path}/chroma")
+        
+        # chromadb.Client(_client_settings) # 
 
     def get_collection_name(self, chat_id, url):
         hashed = hashlib.md5(url.encode()).hexdigest()
@@ -48,22 +50,3 @@ class ChromaStorage:
             return index
         return None
     
-    # def get_vector_index_from_url(self, chat_id, url):
-    #     collection = self.get_collection(chat_id, url)   
-    #     if (collection.count() > 0):
-    #         vector_store = ChromaVectorStore(chroma_collection=collection)
-    #         index = VectorStoreIndex.from_vector_store(
-    #             vector_store)
-    #         return index
-    #     else:
-    #         crawl = WebCrawling()
-    #         textArray = crawl.get_web_content(url)
-    #         documents = [Document(text=t) for t in textArray.get('urlText')]
-    #         vector_store = ChromaVectorStore(chroma_collection=collection)
-    #         storage_context = StorageContext.from_defaults(
-    #             vector_store=vector_store)
-    #         index = VectorStoreIndex.from_documents(
-    #             documents, storage_context=storage_context)
-    #         return index
-
-

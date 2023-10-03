@@ -10,6 +10,9 @@ ENV FLASK_ENV=production
  
 # Set the working directory inside the container
 WORKDIR /app
+
+# Mount the volume to /app/data
+VOLUME ["/app/data"]
  
 # Copy the project files to the working directory
 COPY . /app

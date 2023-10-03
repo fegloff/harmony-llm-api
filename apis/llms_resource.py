@@ -21,6 +21,7 @@ class LlmsCompletionRes(Resource):
         Endpoint to handle LLMs request.
         Receives a message from the user, processes it, and returns a response from the model.
         """ 
+        app.logger.info('handling llm request')
         data = request.json
         if data.get('stream') == "True":
             data['stream'] = True # convert to boolean

@@ -47,6 +47,7 @@ class AddDocument(Resource):
         If collection exists, returns indexing price
         """
         try:
+            app.logger.info('Checking collection status')
             data = request.args
             collection_name = data.get('collectionName')
             if (collection_name):
@@ -86,6 +87,7 @@ class WebCrawlerTextRes(Resource):
         conversation = data.get('conversation')
         chat_history = [ChatMessage(content=item.get('content'), role=item.get('role')) for item in conversation]
         try:
+            app.logger.info('Inquiring a collection')
             if collection_name:
                 response = collection_helper.collection_query(collection_name, prompt, chat_history) 
                 return make_response(jsonify(response), 200)
@@ -99,35 +101,3 @@ class WebCrawlerTextRes(Resource):
             else:
                 return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
             
-        
-# @api.route('/text')
-# class WebCrawlerTextRes(Resource):
-#     # 
-#     # @copy_current_request_context
-#     def post(self):
-#         """
-#         Endpoint to handle LLMs request.
-#         Receives a message from the user, processes it, and returns a response from the model.
-#         """ 
-#         data = request.json
-#         prompt = data.get('prompt')
-#         token = data.get('token')
-#         chatId = data.get('chatId')
-#         msgId = data.get('msgId')
-#         url = data.get('url')
-#         try:
-#             if prompt and token and chatId and msgId and url:
-#                 thread = threading.Thread(target=text_array.text_query, args=(url, prompt, token, chatId, msgId))
-#                 thread.start()
-#                 return 'OK', 200
-#             else:
-#                 return "Bad request, parameters missing", 400
-#         except openai.error.OpenAIError as e:
-#             error_message = str(e)
-#             print(f"OpenAI API Error: {error_message}")
-#             return jsonify({"error": error_message}), 500
-#         except Exception as e:
-#             error_message = str(e)
-#             print(f"Unexpected Error: {error_message}")
-#             return jsonify({"error": "An unexpected error occurred."}), 500        
-

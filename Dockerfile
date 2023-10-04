@@ -1,5 +1,5 @@
 	# Use the official Python 3.11 image as the base image
-FROM python:3.11
+FROM python:3.10.13
  
 # Set environment variables for configuration
 ENV FLASK_APP=main.py

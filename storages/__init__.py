@@ -6,6 +6,6 @@ client_settings = Settings(
     is_persistent= True
 )
 
-path = './chroma' if config.ENV == 'production' else config.CHROMA_SERVER_PATH
+path = './chroma' if config.ENV == 'development' else config.CHROMA_SERVER_PATH
 
 chromadb = ChromaStorage(path, client_settings)

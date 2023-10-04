@@ -41,24 +41,25 @@ class AddDocument(Resource):
             app.logger.error(f"Unexpected Error: {error_message}")
             return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
 
-    def get(self):
+@api.route('/document/<collection_name>')
+class CheckDocument(Resource):
+
+    @api.doc(params={"collection_name": msg.API_DOC_PARAMS_COLLECTION_NAME})
+    def get(self, collection_name):
         """
         Endpoint that checks collection creation status.
         If collection exists, returns indexing price
         """
         try:
             app.logger.info('Checking collection status')
-            data = request.args
-            collection_name = data.get('collectionName')
             if (collection_name):
                 collection = collection_helper.get_collection(collection_name)
                 if (collection):
                     embeddings_number = collection.count()
-                    print(f'******* {embeddings_number}')
+                    app.logger.info(f'******* Number of embeddings: {embeddings_number}')
                     response = {
                         "price": embeddings_number * 0.05 # TBD
                     }
-                    print(f'hi TBD {id}')
                     return make_response(jsonify(response), 200)
                 response = {
                     "price": -1

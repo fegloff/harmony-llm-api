@@ -3,15 +3,14 @@ from llama_index import Document, VectorStoreIndex
 from llama_index.vector_stores import ChromaVectorStore
 from llama_index.storage.storage_context import StorageContext
 import chromadb
-import chromadb.config
+from chromadb.config import Settings
 import hashlib
-import os
 
 class ChromaStorage:
 
-    def __init__(self):
-        path = '/app/data' 
-        self.db = chromadb.PersistentClient(f"{path}/chroma")
+    def __init__(self, path, settings):
+       
+        self.db = chromadb.PersistentClient(path=path)
         
     def get_collection_name(self, chat_id, url):
         hashed = hashlib.md5(url.encode()).hexdigest()

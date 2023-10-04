@@ -1,9 +1,11 @@
 from .chromadb_storage import ChromaStorage
-import chromadb.config
+from chromadb.config import Settings
+from config import config
 
-_client_settings = chromadb.config.Settings(
-    persist_directory= "./chroma",
+client_settings = Settings(
     is_persistent= True
 )
 
-chromadb = ChromaStorage(_client_settings)
+path = './chroma' if config.ENV == 'production' else config.CHROMA_SERVER_PATH
+
+chromadb = ChromaStorage(path, client_settings)

@@ -9,6 +9,9 @@ class CollectionHelper:
 
     def get_collection_name(self, chat_id, url):
         return self.db.get_collection_name(chat_id, url)
+
+    def is_pdf_url(self, url):
+        return url.lower().endswith('.pdf')    
     
     def collection_request_handler(self, url, file_name, collection_name):
         if (not self.is_pdf_url(url)):

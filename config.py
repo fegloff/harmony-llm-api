@@ -20,8 +20,9 @@ class Config(object):
     TESTING = os.getenv('TESTING')
     SECRET_KEY = generate_new_secret_key()
     SESSION_TYPE = os.getenv('SESSION_TYPE')
-    CHROMA_SERVER_HOST = os.getenv('CHROMA_SERVER_HOST')
-    CHROMA_SERVER_HTTP_PORT = os.getenv('CHROMA_SERVER_HTTP_PORT')
+    CHROMA_SERVER_PATH = "/app/data/chroma"
+    # CHROMA_SERVER_HOST = os.getenv('CHROMA_SERVER_HOST')
+    # CHROMA_SERVER_HTTP_PORT = os.getenv('CHROMA_SERVER_HTTP_PORT')
     WEB_CRAWLER_HTTP = os.environ.get('WEB_CRAWLER_HTTP')
 
 config = Config()

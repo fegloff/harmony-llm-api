@@ -33,9 +33,9 @@ class AddDocument(Resource):
                 collection_name = collection_helper.get_collection_name(chat_id, url)
                 thread = threading.Thread(target=collection_helper.collection_request_handler, args=(url, file_name, collection_name))
                 thread.start()
-                return f'{collection_name}', 200
+                return make_response(jsonify({"collectionName": f"{collection_name}"}), 200)
             else:
-                return "Bad request, parameters missing", 400
+                return make_response(jsonify({"error": "Bad request, parameters missing"}), 400)
         except Exception as e:
             error_message = str(e)
             app.logger.error(f"Unexpected Error: {error_message}")
@@ -71,7 +71,6 @@ class AddDocument(Resource):
             app.logger.error(f"Unexpected Error: {error_message}")
             return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
 
-
 @api.route('/query')
 class WebCrawlerTextRes(Resource):
     # 
@@ -100,4 +99,3 @@ class WebCrawlerTextRes(Resource):
                 return e.args[1], 404
             else:
                 return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
-            

@@ -10,3 +10,4 @@ data/chroma_db
 .env.testing
 data/
 chroma/
+venv/

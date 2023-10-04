@@ -10,14 +10,9 @@ import os
 class ChromaStorage:
 
     def __init__(self):
-        path = '/app/data' # os.getcwd()
-        # _client_settings = chromadb.config.Settings(
-        #     persist_directory=f"{path}/chroma",
-        #     is_persistent=True)
+        path = '/app/data' 
         self.db = chromadb.PersistentClient(f"{path}/chroma")
         
-        # chromadb.Client(_client_settings) # 
-
     def get_collection_name(self, chat_id, url):
         hashed = hashlib.md5(url.encode()).hexdigest()
         if not hashed[0].isalnum():
@@ -26,6 +21,7 @@ class ChromaStorage:
             hashed = hashed[:-1] + 'a'
         valid_characters = ''.join(c for c in hashed if c.isalnum() or c in ('_', '-'))
         return f"chat{chat_id}-{valid_characters}"
+
 
     def get_collection(self, collection_name):
         collection = self.db.get_or_create_collection(
@@ -40,6 +36,16 @@ class ChromaStorage:
             vector_store=vector_store)
         index = VectorStoreIndex.from_documents(
             documents, storage_context=storage_context)
+    
+    def store_text_array(self, text_array, collection_name):
+        collection = self.get_collection(collection_name)
+        documents = [Document(text=t) for t in text_array]
+        vector_store = ChromaVectorStore(chroma_collection=collection)
+        storage_context = StorageContext.from_defaults(
+            vector_store=vector_store)
+        index = VectorStoreIndex.from_documents(
+            documents, storage_context=storage_context)
+        print(f'****** {index.summary}')
 
     def get_vector_index(self, collection_name):
         collection = self.get_collection(collection_name)

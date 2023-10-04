@@ -35,9 +35,9 @@ class AddDocument(Resource):
         
         pdf = data.get('pdf')
         try:
-            if (chat_id and (url or pdf_url)):
-                collection_name = collection_helper.get_collection_name(chat_id, url, pdf_url)
-                thread = threading.Thread(target=collection_helper.collection_request_handler, args=(url, pdf_url, file_name, collection_name))
+            if (chat_id and (url or pdf)):
+                collection_name = collection_helper.get_collection_name(chat_id, url, pdf)
+                thread = threading.Thread(target=collection_helper.collection_request_handler, args=(url, pdf, collection_name))
                 thread.start()
                 return make_response(jsonify({"collectionName": f"{collection_name}"}), 200)
             else:

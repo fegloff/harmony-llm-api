@@ -1,4 +1,4 @@
-from flask import request, jsonify, Response, make_response
+from flask import request, jsonify, Response, make_response, current_app as app
 from flask_restx import Namespace, Resource
 from litellm import completion
 from openai.error import OpenAIError
@@ -21,6 +21,7 @@ class LlmsCompletionRes(Resource):
         Endpoint to handle LLMs request.
         Receives a message from the user, processes it, and returns a response from the model.
         """ 
+        app.logger.info('handling llm request')
         data = request.json
         if data.get('stream') == "True":
             data['stream'] = True # convert to boolean
@@ -37,12 +38,12 @@ class LlmsCompletionRes(Resource):
         except OpenAIError as e:
             # Handle OpenAI API errors
             error_message = str(e)
-            print(f"OpenAI API Error: {error_message}")
+            app.logger.error(f"OpenAI API Error: {error_message}")
             return jsonify({"error": error_message}), 500
         except Exception as e:
             # Handle other unexpected errors
             error_message = str(e)
-            print(f"Unexpected Error: {error_message}")
+            app.logger.error(f"Unexpected Error: {error_message}")
             return jsonify({"error": "An unexpected error occurred."}), 500
         # return response, 200
         return make_response(jsonify(response), 200)

@@ -9,6 +9,5 @@ data/chroma_db
 .env.development
 .env.testing
 data/
-res/service_account.json
 chroma/
 venv/

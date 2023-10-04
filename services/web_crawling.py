@@ -1,6 +1,6 @@
 import logging
 import requests
-from res import config
+from config import config
 
 class WebCrawling:
 
@@ -12,7 +12,6 @@ class WebCrawling:
             url = "https://" + url
         credentials = f"&username={username}&password={password}" if username and password else ""
         request_url = f"{self.base_url}parse?url={url}{credentials}"
-        logging.info(request_url)
 
         try:
             response = requests.get(request_url)

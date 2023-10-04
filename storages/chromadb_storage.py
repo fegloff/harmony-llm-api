@@ -37,6 +37,7 @@ class ChromaStorage:
             documents, storage_context=storage_context)
     
     def store_text_array(self, text_array, collection_name):
+        # if (text_array.__len__() > 0):
         collection = self.get_collection(collection_name)
         documents = [Document(text=t) for t in text_array]
         vector_store = ChromaVectorStore(chroma_collection=collection)
@@ -44,7 +45,9 @@ class ChromaStorage:
             vector_store=vector_store)
         index = VectorStoreIndex.from_documents(
             documents, storage_context=storage_context)
-        print(f'****** {index.summary}')
+        # else:
+        #     raise Exception ('Error', 'PDF file not supported/readable', 415)
+       
 
     def get_vector_index(self, collection_name):
         collection = self.get_collection(collection_name)

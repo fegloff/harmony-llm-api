@@ -5,6 +5,7 @@ import threading
 from llama_index.llms.base import ChatMessage
 from res import EngMsg as msg
 from storages import chromadb
+from res import PdfFileInvalidFormat, InvalidCollectionName
 from .collections_helper import CollectionHelper
 
 api = Namespace('collections', description=msg.API_NAMESPACE_LLMS_DESCRIPTION)
@@ -31,7 +32,7 @@ class AddDocument(Resource):
         try:
             if (chat_id and url):
                 collection_name = collection_helper.get_collection_name(chat_id, url)
-                thread = threading.Thread(target=collection_helper.collection_request_handler, args=(url, file_name, collection_name))
+                thread = threading.Thread(target=collection_helper.collection_request_handler, args=(url, collection_name, file_name))
                 thread.start()
                 return make_response(jsonify({"collectionName": f"{collection_name}"}), 200)
             else:
@@ -66,7 +67,8 @@ class CheckDocument(Resource):
                 }
                 return make_response(jsonify(response), 200)
             else:
-                return "Bad request, parameters missing", 400    
+                return "Bad request, parameters missing", 400
+
         except Exception as e:
             error_message = str(e)
             app.logger.error(f"Unexpected Error: {error_message}")
@@ -93,10 +95,14 @@ class WebCrawlerTextRes(Resource):
                 return make_response(jsonify(response), 200)
             else:
                 return make_response(jsonify({"error": "Bad request"}), 400)
+        except InvalidCollectionName as e:
+            app.logger.error(e)
+            return make_response(jsonify({"error": e.args[1]}), 404)   
         except Exception as e:
-            error_message = str(e)
-            app.logger.error(f"Unexpected Error: {error_message}")
-            if (e.args[2] == 404):
-                return e.args[1], 404
-            else:
-                return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
+            return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
+
+
+@api.errorhandler(PdfFileInvalidFormat)
+def PdfHandlingError():
+    app.logger.error(f"Unexpected Error: {'PDF file not supported/readable'}")
+    return 'PDF file not supported/readable', 415

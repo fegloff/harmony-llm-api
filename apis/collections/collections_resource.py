@@ -1,5 +1,7 @@
+import shutil
 from flask import request, jsonify, make_response, current_app as app
 from flask_restx import Namespace, Resource
+from openai import OpenAIError
 import json
 import threading
 from llama_index.llms.base import ChatMessage
@@ -8,6 +10,7 @@ from storages import chromadb
 from res import PdfFileInvalidFormat, InvalidCollectionName
 from .collections_helper import CollectionHelper
 
+
 api = Namespace('collections', description=msg.API_NAMESPACE_LLMS_DESCRIPTION)
 
 def data_generator(response):
@@ -15,6 +18,26 @@ def data_generator(response):
         yield f"data: {json.dumps(chunk)}\n\n"
 
 collection_helper = CollectionHelper(chromadb)
+
+
+@api.route('/')
+class CollectionHandler(Resource):
+    def delete(self):
+        """
+        Endpoint that resets Chromadb
+        """
+        app.logger.info('Reseting Chromadb')
+        try:
+            if (collection_helper.reset_database()):
+                collection_helper.delete_folders()
+                return 'OK', 204
+            else:
+                return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
+        except Exception as e:
+            app.logger.error(e)
+            error_message = str(e)
+            app.logger.error(f"Unexpected Error: {error_message}")
+            return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
 
 @api.route('/document')
 class AddDocument(Resource):
@@ -68,12 +91,29 @@ class CheckDocument(Resource):
                 return make_response(jsonify(response), 200)
             else:
                 return "Bad request, parameters missing", 400
-
         except Exception as e:
             error_message = str(e)
             app.logger.error(f"Unexpected Error: {error_message}")
             return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
-
+    
+    @api.doc(params={"collection_name": msg.API_DOC_PARAMS_COLLECTION_NAME})
+    def delete(self, collection_name):
+        """
+        Endpoint that deletes a collection
+        """            
+        try:
+            app.logger.info('Deleting collection')
+            if (collection_name):
+                collection_helper.delete_collection(collection_name)
+                return 'OK', 204
+            else:
+                return "Bad request, parameters missing", 400
+        except ValueError as e:
+            return 'OK', 204
+        except Exception as e:
+            error_message = str(e)
+            app.logger.error(f"Unexpected Error: {error_message}")
+            return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
 @api.route('/query')
 class WebCrawlerTextRes(Resource):
     # 
@@ -89,16 +129,23 @@ class WebCrawlerTextRes(Resource):
         conversation = data.get('conversation')
         chat_history = [ChatMessage(content=item.get('content'), role=item.get('role')) for item in conversation]
         try:
-            app.logger.info('Inquiring a collection')
+            app.logger.info(f'Inquiring a collection {collection_name}')
             if collection_name:
                 response = collection_helper.collection_query(collection_name, prompt, chat_history) 
                 return make_response(jsonify(response), 200)
             else:
+                app.logger.error('Bad request')
                 return make_response(jsonify({"error": "Bad request"}), 400)
         except InvalidCollectionName as e:
             app.logger.error(e)
             return make_response(jsonify({"error": e.args[1]}), 404)   
+        except OpenAIError as e:
+            # Handle OpenAI API errors
+            error_message = str(e)
+            app.logger.error(f"OpenAI API Error: {error_message}")
+            return jsonify({"error": error_message}), 500
         except Exception as e:
+            app.logger.error(e)
             return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
 
 

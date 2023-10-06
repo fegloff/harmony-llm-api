@@ -3,9 +3,10 @@ from chromadb.config import Settings
 from config import config
 
 client_settings = Settings(
-    is_persistent= True
+    is_persistent= True,
+    allow_reset=True
 )
 
-path = './chroma' if config.ENV == 'development' else config.CHROMA_SERVER_PATH
+path = config.CHROMA_SERVER_PATH
 
 chromadb = ChromaStorage(path, client_settings)

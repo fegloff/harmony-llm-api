@@ -20,7 +20,7 @@ def data_generator(response):
 collection_helper = CollectionHelper(chromadb)
 
 
-@api.route('/reset')
+@api.route('/reset', doc=False)
 class CollectionHandler(Resource):
     def post(self):
         """

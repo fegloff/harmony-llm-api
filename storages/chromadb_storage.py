@@ -9,8 +9,11 @@ import hashlib
 class ChromaStorage:
 
     def __init__(self, path, settings):
-       
-        self.db = chromadb.PersistentClient(path=path)
+        self.path = path
+        self.db = chromadb.PersistentClient(path=path, settings=settings)
+
+    def get_path(self):
+        return self.path
         
     def get_collection_name(self, chat_id, url):
         hashed = hashlib.md5(url.encode()).hexdigest()
@@ -22,6 +25,13 @@ class ChromaStorage:
         return f"chat{chat_id}-{valid_characters}"
 
 
+    def get_existing_collection(self, collection_name):
+        try:
+            collection = self.db.get_collection(collection_name)
+            return collection
+        except ValueError as e:
+            return None
+    
     def get_collection(self, collection_name):
         collection = self.db.get_or_create_collection(
             name=collection_name)
@@ -35,9 +45,11 @@ class ChromaStorage:
             vector_store=vector_store)
         index = VectorStoreIndex.from_documents(
             documents, storage_context=storage_context)
+        # print(f'********* INDEX {index.index_id} COLLECTION {collection.id} {collection.metadata}')
+        index.storage_context.persist(f'{self.path}/{collection.id}')
+
     
     def store_text_array(self, text_array, collection_name):
-        # if (text_array.__len__() > 0):
         collection = self.get_collection(collection_name)
         documents = [Document(text=t) for t in text_array]
         vector_store = ChromaVectorStore(chroma_collection=collection)
@@ -45,12 +57,12 @@ class ChromaStorage:
             vector_store=vector_store)
         index = VectorStoreIndex.from_documents(
             documents, storage_context=storage_context)
-        # else:
-        #     raise Exception ('Error', 'PDF file not supported/readable', 415)
-       
+        index.storage_context.persist(f'{self.path}/{collection.id}')
+
 
     def get_vector_index(self, collection_name):
         collection = self.get_collection(collection_name)
+        # print(collection.get(include=['embeddings', 'documents', 'metadatas'])
         if (collection.count() > 0):
             vector_store = ChromaVectorStore(chroma_collection=collection)
             index = VectorStoreIndex.from_vector_store(
@@ -58,3 +70,8 @@ class ChromaStorage:
             return index
         return None
     
+    def delete_collection(self, collection_name):
+        self.db.delete_collection(collection_name)
+
+    def reset_database(self):
+        return self.db.reset()

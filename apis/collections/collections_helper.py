@@ -1,3 +1,5 @@
+import os
+import shutil
 from storages import ChromaStorage
 from llama_index.chat_engine.types import ChatMode
 from services import WebCrawling, PdfHandler
@@ -7,6 +9,9 @@ class CollectionHelper:
     def __init__(self, storage_provider: ChromaStorage):
         self.db = storage_provider
 
+    def get_db(self):
+        return self.db
+    
     def get_collection_name(self, chat_id, url):
         return self.db.get_collection_name(chat_id, url)
 
@@ -49,3 +54,24 @@ class CollectionHelper:
             }
         else: 
             raise InvalidCollectionName("Collection Error", "collection doesn't exist, please try again later", 404)
+
+    def delete_collection(self, collection_name):
+        collection = self.db.get_existing_collection(collection_name)
+        if (collection):
+            self.db.delete_collection(collection_name)
+            path = self.db.get_path()
+            folder = f"{path}/{collection.id}"
+            print(f'folder to delete {folder}')
+            if (os.path.isdir(folder)):
+                shutil.rmtree(folder)
+    
+    def reset_database(self):
+        return self.db.reset_database()
+    
+    def delete_folders(self):
+        path = self.db.get_path()
+        contents = os.listdir(path)
+        for item in contents:
+            item_path = os.path.join(path, item)
+            if os.path.isdir(item_path):
+                shutil.rmtree(item_path, ignore_errors=True)

@@ -13,6 +13,7 @@ def generate_new_secret_key():
     key = os.urandom(24).hex()
     return key
 class Config(object):
+    ENV=os.environ.get('ENV')
     DEBUG = os.environ.get('DEBUG')
     TESTING = os.getenv('TESTING')
     SECRET_KEY = generate_new_secret_key()

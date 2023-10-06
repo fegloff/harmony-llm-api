@@ -20,9 +20,9 @@ def data_generator(response):
 collection_helper = CollectionHelper(chromadb)
 
 
-@api.route('/')
+@api.route('/reset')
 class CollectionHandler(Resource):
-    def delete(self):
+    def post(self):
         """
         Endpoint that resets Chromadb
         """

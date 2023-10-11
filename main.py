@@ -2,18 +2,32 @@ from flask import Flask
 from flask_session import Session
 from flask_cors import CORS
 from apis import api
+from models import db
 import config as app_config
 from res import PdfFileInvalidFormat
+import os
 
 app = Flask(__name__)
 
+app.app_context().push()
+
 app.config['SECRET_KEY']=app_config.config.SECRET_KEY
 app.config['SESSION_PERMANENT'] = True
+if app_config.config.ENV == 'development':
+    app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///:memory:'
+else:
+    app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///"+os.path.join(app_config.config.CHROMA_SERVER_PATH, "app.db")
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.update(SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
 
 sess = Session()
 api.init_app(app)
 sess.init_app(app)
+db.init_app(app)
+
+with app.app_context():
+    db.create_all()
+
 CORS(app)
 
 @app.route('/')

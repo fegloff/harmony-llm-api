@@ -21,6 +21,7 @@ shapely = "*"
 waitress = "*"
 vertexai = "==0.0.1"
 "pdfminer.six" = "*"
+flask-sqlalchemy = "*"
 
 [dev-packages]
 

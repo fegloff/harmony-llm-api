@@ -19,8 +19,7 @@ def data_generator(response):
     for chunk in response:
         yield f"data: {json.dumps(chunk)}\n\n"
 
-collection_helper = CollectionHelper(chromadb, db)
-
+collection_helper = CollectionHelper(chromadb)
 
 @api.route('/reset', doc=False)
 class CollectionHandler(Resource):
@@ -99,7 +98,7 @@ class CheckDocument(Resource):
         """
         try:
             current_app.logger.info('Checking collection status')
-            if (collection_name):
+            if (collection_name): 
                 collection_error = CollectionError.query.filter_by(collection_name=collection_name).first()
                 if (collection_error):
                     response = {
@@ -107,8 +106,10 @@ class CheckDocument(Resource):
                         "status": 'DONE',
                         "error": 'INVALID_COLLECTION'
                     }
-                else: 
+                else:
+                    current_app.logger.info(' ************************ collection_helper.get_collection(collection_name)')
                     collection = collection_helper.get_collection(collection_name)
+                    current_app.logger.info(f' ************************ {collection}')
                     if (collection):
                         embeddings_number = collection.count()
                         current_app.logger.info(f'******* Number of embeddings: {embeddings_number}')
@@ -127,6 +128,7 @@ class CheckDocument(Resource):
             else:
                 return "Bad request, parameters missing", 400
         except Exception as e:
+            current_app.logger.error(e)
             error_message = str(e)
             current_app.logger.error(f"Unexpected Error: {error_message}")
             return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
@@ -149,6 +151,7 @@ class CheckDocument(Resource):
             error_message = str(e)
             current_app.logger.error(f"Unexpected Error: {error_message}")
             return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
+
 @api.route('/query')
 class WebCrawlerTextRes(Resource):
     # 
@@ -180,6 +183,8 @@ class WebCrawlerTextRes(Resource):
             current_app.logger.error(f"OpenAI API Error: {error_message}")
             return jsonify({"error": error_message}), 500
         except Exception as e:
+            error_message = str(e)
+            current_app.logger.error(f'ERROR ***************: {error_message}')
             current_app.logger.error(e)
             return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
 

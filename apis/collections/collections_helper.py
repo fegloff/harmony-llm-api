@@ -6,9 +6,8 @@ from llama_index.chat_engine.types import ChatMode
 from res import InvalidCollectionName
 class CollectionHelper:
 
-    def __init__(self, storage_provider: ChromaStorage, sqlite_db):
+    def __init__(self, storage_provider: ChromaStorage):
         self.db = storage_provider
-        self.app_db = sqlite_db
 
     def get_db(self):
         return self.db

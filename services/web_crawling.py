@@ -12,7 +12,7 @@ class WebCrawling:
             url = "https://" + url
         credentials = f"&username={username}&password={password}" if username and password else ""
         request_url = f"{self.base_url}parse?url={url}{credentials}"
-
+        
         try:
             response = requests.get(request_url)
             response.raise_for_status()
@@ -29,6 +29,7 @@ class WebCrawling:
                 "oneFees": 0.5,
             }
         except requests.exceptions.RequestException as e:
+            logging.error(e)
             raise e
 
     def clean_web_crawl(self, chunks):

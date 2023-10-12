@@ -16,7 +16,7 @@ app.config['SESSION_PERMANENT'] = True
 if app_config.config.ENV == 'development':
     app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///:memory:'
 else:
-    app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///"+os.path.join(app_config.config.CHROMA_SERVER_PATH, "app.db")
+    app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///"+os.path.join(app_config.config.CHROMA_SERVER_PATH, "app.db") # chroma.sqlite3
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.update(SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
 

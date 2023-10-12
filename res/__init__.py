@@ -3,7 +3,7 @@ import logging
 import sys
 
 from .text_messages import EngMsg
-from .llm_exceptions import InvalidCollectionName, PdfFileInvalidFormat, DatabaseError
+from .llm_exceptions import InvalidCollectionName, PdfFileInvalidFormat, DatabaseError, InvalidCollection
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))

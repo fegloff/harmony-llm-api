@@ -7,7 +7,7 @@ import threading
 from llama_index.llms.base import ChatMessage
 from res import EngMsg as msg
 from storages import chromadb
-from res import PdfFileInvalidFormat, InvalidCollectionName
+from res import PdfFileInvalidFormat, InvalidCollectionName, InvalidCollection
 from .collections_helper import CollectionHelper
 from models import db
 from services import WebCrawling, PdfHandler
@@ -68,19 +68,25 @@ class AddDocument(Resource):
             return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
 
     def __collection_request_handler(self, url, collection_name, file_name, context):
-        if (not collection_helper.is_pdf_url(url)):
-            crawl = WebCrawling()
-            text_array = crawl.get_web_content(url)
-            collection_helper.db.store_text_array_from_url(text_array, collection_name)
-        else:
-            pdf_handler = PdfHandler()
-            chunks = pdf_handler.pdf_to_chunks(url)
-            if (chunks.__len__() > 0):
-                collection_helper.db.store_text_array(chunks, collection_name)
+        try:
+            if (not collection_helper.is_pdf_url(url)):
+                crawl = WebCrawling()
+                text_array = crawl.get_web_content(url)
+                if text_array.get('urlText').__len__() > 0:
+                    collection_helper.db.store_text_array_from_url(text_array, collection_name)
+                else:
+                    raise InvalidCollection('Invalid collection')
             else:
-                context.push()  
-                error = CollectionError(dict( collection_name = collection_name))
-                error.save()
+                pdf_handler = PdfHandler()
+                chunks = pdf_handler.pdf_to_chunks(url)
+                if (chunks.__len__() > 0):
+                    collection_helper.db.store_text_array(chunks, collection_name)
+                else:
+                    raise InvalidCollection('Invalid collection')
+        except (Exception, InvalidCollection) as e:
+            context.push()  
+            error = CollectionError(dict( collection_name = collection_name))
+            error.save()
 
 @api.route('/document/<collection_name>')
 class CheckDocument(Resource):
@@ -99,7 +105,7 @@ class CheckDocument(Resource):
                     response = {
                         "price": -1, # TBD
                         "status": 'DONE',
-                        "error": 'INVALID_PDF'
+                        "error": 'INVALID_COLLECTION'
                     }
                 else: 
                     collection = collection_helper.get_collection(collection_name)

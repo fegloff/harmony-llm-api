@@ -17,11 +17,9 @@ class WebCrawling:
             response = requests.get(request_url)
             response.raise_for_status()
             result = response.json()
-
             logging.info(
                 f"Webcrawling {url} => Tags processed: {len(result['elements']) if 'elements' in result else 0}"
             )
-
             chunks = self.parse_web_content(result['elements'])
             return {
                 "urlText": chunks,

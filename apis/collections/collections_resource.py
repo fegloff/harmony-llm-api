@@ -107,9 +107,7 @@ class CheckDocument(Resource):
                         "error": 'INVALID_COLLECTION'
                     }
                 else:
-                    current_app.logger.info(' ************************ collection_helper.get_collection(collection_name)')
                     collection = collection_helper.get_collection(collection_name)
-                    current_app.logger.info(f' ************************ {collection}')
                     if (collection):
                         embeddings_number = collection.count()
                         current_app.logger.info(f'******* Number of embeddings: {embeddings_number}')
@@ -164,6 +162,7 @@ class WebCrawlerTextRes(Resource):
         data = request.json
         prompt = data.get('prompt')
         collection_name = data.get('collectionName')
+        url = data.get('url')
         conversation = data.get('conversation')
         chat_history = [ChatMessage(content=item.get('content'), role=item.get('role')) for item in conversation]
         try:
@@ -175,6 +174,7 @@ class WebCrawlerTextRes(Resource):
                 current_app.logger.error('Bad request')
                 return make_response(jsonify({"error": "Bad request"}), 400)
         except InvalidCollectionName as e:
+            
             current_app.logger.error(e)
             return make_response(jsonify({"error": e.args[1]}), 404)   
         except OpenAIError as e:

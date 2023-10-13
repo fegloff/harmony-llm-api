@@ -22,14 +22,6 @@ class CollectionHelper:
         collection = self.db.get_collection(collection_name)
         return collection
 
-    def get_collection(self, collection_name): 
-        collection = self.db.get_collection(collection_name)
-        return collection
-
-    def get_collection(self, collection_name): 
-        collection = self.db.get_collection(collection_name)
-        return collection
-
     def collection_query(self, collection_name, prompt, conversation):
         index = self.db.get_vector_index(collection_name)
         if index:

@@ -42,12 +42,11 @@ class VertexCompletionRes(Resource):
         Endpoint to handle Google's Vertex/Palm2 LLMs.
         Receives a message from the user, processes it, and returns a response from the model.
         """
+        app.logger.info('handling chat-bison request')
         data = request.json
         if data.get('stream') == "True":
             data['stream'] = True # convert to boolean
-
         try:
-            app.logger.info('handling chat-bison request')
             if data.get('stream') == "True":
                 data['stream'] = True # convert to boolean
             # pass in data to completion function, unpack data

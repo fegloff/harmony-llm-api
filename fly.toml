@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for harmony-llm-api-dev on 2023-10-12T11:37:12-05:00
+# fly.toml app configuration file generated for harmony-llm-api-dev on 2023-10-12T17:41:19-05:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -8,10 +8,6 @@ primary_region = "den"
 
 [build]
 
-[[mounts]]
-  source = "llm_api_data_dev"
-  destination = "/data"
-
 [http_service]
   internal_port = 8080
   force_https = true
@@ -19,3 +15,7 @@ primary_region = "den"
   auto_start_machines = true
   min_machines_running = 1
   processes = ["app"]
+
+[mounts]
+  source="llm_api_data_dev"
+  destination="/data"

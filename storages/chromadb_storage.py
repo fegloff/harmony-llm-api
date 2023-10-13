@@ -12,7 +12,6 @@ class ChromaStorage:
     def __init__(self, path, settings: Settings):
         self.path = path
         self.db = chromadb.PersistentClient(path=path, settings=settings)
-        # self.__db_connection = SqliteHandler(path)
 
     def get_path(self):
         return self.path
@@ -57,7 +56,7 @@ class ChromaStorage:
         service_context = self.get_llms()
         index = VectorStoreIndex.from_documents(
             documents, storage_context=storage_context, service_context=service_context)
-        index.storage_context.persist(f'{self.path}/{collection.id}')
+        index.storage_context.persist(persist_dir=f'{self.path}/{collection.id}')
 
     
     def store_text_array(self, text_array, collection_name):
@@ -69,7 +68,7 @@ class ChromaStorage:
         service_context = self.get_llms()
         index = VectorStoreIndex.from_documents(
             documents, storage_context=storage_context, service_context=service_context)
-        index.storage_context.persist(f'{self.path}/{collection.id}')
+        index.storage_context.persist(persist_dir=f'{self.path}/{collection.id}')
 
 
     def get_vector_index(self, collection_name):

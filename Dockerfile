@@ -20,6 +20,7 @@ COPY . /app
 RUN apt-get update && apt-get install -y \
     libgeos-dev
 # Install the project dependencies
+# RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
  
 # Expose the port on which the Flask app will run

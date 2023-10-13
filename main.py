@@ -4,8 +4,8 @@ from flask_cors import CORS
 from apis import api
 from models import db
 import config as app_config
-from res import PdfFileInvalidFormat
 import os
+import logging
 
 app = Flask(__name__)
 
@@ -30,6 +30,7 @@ with app.app_context():
 
 CORS(app)
 
+logging.info(f'****** APP Enviroment={app_config.config.ENV} *******')
 @app.route('/')
 def index():
     return 'received!', 200
@@ -40,8 +41,10 @@ def health():
 
 
 if __name__ == '__main__':
+    # from waitress import serve
+    # serve(app, host="0.0.0.0", port=8080) # listen='0.0.0.0:8081') # port=8080, host="0.0.0.0",
     if app_config.config.ENV != 'development':
         from waitress import serve
-        serve(app, host="0.0.0.0", port=8080)
+        serve(app, host="0.0.0.0", port=8080) 
     else:
         app.run(debug=True)

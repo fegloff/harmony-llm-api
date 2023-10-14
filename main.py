@@ -9,14 +9,16 @@ import logging
 
 app = Flask(__name__)
 
-app.app_context().push()
-
 app.config['SECRET_KEY']=app_config.config.SECRET_KEY
 app.config['SESSION_PERMANENT'] = True
-if app_config.config.ENV == 'development':
-    app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///:memory:'
-else:
-    app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///"+os.path.join(app_config.config.CHROMA_SERVER_PATH, "app.db") # chroma.sqlite3
+app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///:memory:'
+# if app_config.config.ENV == 'development':
+#     app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///:memory:'
+# else:
+#     path = app_config.config.CHROMA_SERVER_PATH 
+#     os.makedirs(os.path.dirname(path), exist_ok=True)
+#     # f = open(os.path.join(app_config.config.CHROMA_SERVER_PATH, "app.db"), 'w')
+#     app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///" +os.path.join(app_config.config.CHROMA_SERVER_PATH, "app.db") # chroma.sqlite3
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config.update(SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
 
@@ -25,8 +27,9 @@ api.init_app(app)
 sess.init_app(app)
 db.init_app(app)
 
-with app.app_context():
-    db.create_all()
+app.app_context().push()
+# with app.app_context():
+db.create_all()
 
 CORS(app)
 

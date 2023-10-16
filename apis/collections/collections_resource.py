@@ -30,7 +30,7 @@ class CollectionHandler(Resource):
         current_app.logger.info('Reseting Chromadb')
         try:
             if (collection_helper.reset_database()):
-                collection_helper.delete_folders()
+                # collection_helper.delete_folders()
                 return 'OK', 204
             else:
                 return make_response(jsonify({"error": "An unexpected error occurred."}), 500)
@@ -139,7 +139,7 @@ class CheckDocument(Resource):
         try:
             current_app.logger.info('Deleting collection')
             if (collection_name):
-                collection_helper.delete_collection(collection_name)
+                # collection_helper.delete_collection(collection_name)
                 return 'OK', 204
             else:
                 return "Bad request, parameters missing", 400

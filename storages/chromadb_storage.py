@@ -11,8 +11,7 @@ class ChromaStorage:
 
     def __init__(self, path, settings: Settings):
         self.path = path
-        # self.temp_db = chromadb.PersistentClient(path=path, settings=settings)
-        self.db = chromadb.HttpClient(host=config.CHROMADB_SERVER_URL, port='8000') # .PersistentClient(path=path, settings=settings)
+        self.db = chromadb.HttpClient(host=config.CHROMADB_SERVER_URL, port='8000')
 
     def get_path(self):
         return self.path
@@ -44,8 +43,7 @@ class ChromaStorage:
             return None
     
     def get_collection(self, collection_name):
-        collection = self.db.get_or_create_collection(
-            name=collection_name)
+        collection = self.db.create_collection(name=collection_name, get_or_create=True)
         return collection
     
     def store_text_array_from_url(self, text_array, collection_name): 
@@ -57,7 +55,6 @@ class ChromaStorage:
         service_context = self.get_llms()
         index = VectorStoreIndex.from_documents(
             documents, storage_context=storage_context, service_context=service_context)
-        # index.storage_context.persist(persist_dir=f'{self.path}/{collection.id}')
 
     
     def store_text_array(self, text_array, collection_name):
@@ -69,7 +66,6 @@ class ChromaStorage:
         service_context = self.get_llms()
         index = VectorStoreIndex.from_documents(
             documents, storage_context=storage_context, service_context=service_context)
-        # index.storage_context.persist(persist_dir=f'{self.path}/{collection.id}')
 
 
     def get_vector_index(self, collection_name):

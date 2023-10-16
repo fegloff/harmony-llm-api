@@ -38,18 +38,18 @@ class CollectionHelper:
         collection = self.db.get_existing_collection(collection_name)
         if (collection):
             self.db.delete_collection(collection_name)
-            path = self.db.get_path()
-            folder = f"{path}/{collection.id}"
-            if (os.path.isdir(folder)):
-                shutil.rmtree(folder)
+            # path = self.db.get_path()
+            # folder = f"{path}/{collection.id}"
+            # if (os.path.isdir(folder)):
+            #     shutil.rmtree(folder)
     
     def reset_database(self):
         return self.db.reset_database()
     
-    def delete_folders(self):
-        path = self.db.get_path()
-        contents = os.listdir(path)
-        for item in contents:
-            item_path = os.path.join(path, item)
-            if os.path.isdir(item_path):
-                shutil.rmtree(item_path, ignore_errors=True)
+    # def delete_folders(self):
+    #     path = self.db.get_path()
+    #     contents = os.listdir(path)
+    #     for item in contents:
+    #         item_path = os.path.join(path, item)
+    #         if os.path.isdir(item_path):
+    #             shutil.rmtree(item_path, ignore_errors=True)

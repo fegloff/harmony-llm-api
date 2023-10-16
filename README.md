@@ -9,5 +9,5 @@ fly scale vm performance-2x --group app
 fly deploy
 
 ### production
-fly deploy deploy -c fly.production.toml
+fly deploy -c fly.production.toml
 

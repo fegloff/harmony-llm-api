@@ -14,8 +14,7 @@ cachetools==5.3.1
 certifi==2023.7.22
 cffi==1.16.0
 charset-normalizer==3.3.0
-chroma-hnswlib==0.7.1
-chromadb==0.4.3
+chromadb==0.4.14
 click==8.1.7
 cloudpickle==2.2.1
 coloredlogs==15.0.1
@@ -112,8 +111,8 @@ tenacity==8.2.3
 tiktoken==0.5.1
 tokenizers==0.14.0
 tqdm==4.66.1
-tree-sitter==0.20.2
-tree-sitter-languages==1.7.0
+# tree-sitter==0.20.2
+# tree-sitter-languages==1.7.0
 typer==0.9.0
 typing-inspect==0.9.0
 typing_extensions==4.8.0
@@ -128,3 +127,4 @@ websockets==11.0.3
 Werkzeug==3.0.0
 yarl==1.9.2
 zipp==3.17.0
+flask-sqlalchemy==3.1.1

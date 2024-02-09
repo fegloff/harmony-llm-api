@@ -12,6 +12,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY']=app_config.config.SECRET_KEY
 app.config['SESSION_PERMANENT'] = True
 app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///:memory:'
+UPLOAD_FOLDER = 'uploads/'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 # if app_config.config.ENV == 'development':
 #     app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///:memory:'
 # else:
@@ -32,7 +35,6 @@ app.app_context().push()
 db.create_all()
 
 CORS(app)
-
 logging.info(f'****** APP Enviroment={app_config.config.ENV} *******')
 @app.route('/')
 def index():
@@ -51,3 +53,6 @@ if __name__ == '__main__':
         serve(app, host="0.0.0.0", port=8080) 
     else:
         app.run(debug=True)
+
+
+# python main.py

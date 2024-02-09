@@ -22,6 +22,7 @@ waitress = "==2.1.2"
 vertexai = "==0.0.1"
 "pdfminer.six" = "==20221105"
 flask-sqlalchemy = "==3.1.1"
+openai = "*"
 
 [dev-packages]
 

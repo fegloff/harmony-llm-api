@@ -1,10 +1,6 @@
 import logging
-import sys
 import requests
-from res import config
-
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
+from config import config
 
 class WebCrawling:
 
@@ -16,17 +12,14 @@ class WebCrawling:
             url = "https://" + url
         credentials = f"&username={username}&password={password}" if username and password else ""
         request_url = f"{self.base_url}parse?url={url}{credentials}"
-        logging.info(request_url)
-
+        
         try:
             response = requests.get(request_url)
             response.raise_for_status()
             result = response.json()
-
             logging.info(
                 f"Webcrawling {url} => Tags processed: {len(result['elements']) if 'elements' in result else 0}"
             )
-
             chunks = self.parse_web_content(result['elements'])
             return {
                 "urlText": chunks,
@@ -36,6 +29,7 @@ class WebCrawling:
                 "oneFees": 0.5,
             }
         except requests.exceptions.RequestException as e:
+            logging.error(e)
             raise e
 
     def clean_web_crawl(self, chunks):

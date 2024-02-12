@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request, jsonify, make_response, current_app as app
 from flask_restx import Namespace, Resource
 from vertexai.language_models import ChatModel, ChatMessage
 from google.oauth2 import service_account
@@ -42,10 +42,10 @@ class VertexCompletionRes(Resource):
         Endpoint to handle Google's Vertex/Palm2 LLMs.
         Receives a message from the user, processes it, and returns a response from the model.
         """
+        app.logger.info('handling chat-bison request')
         data = request.json
         if data.get('stream') == "True":
             data['stream'] = True # convert to boolean
-
         try:
             if data.get('stream') == "True":
                 data['stream'] = True # convert to boolean
@@ -68,14 +68,15 @@ class VertexCompletionRes(Resource):
             # if data['stream'] == True: # use generate_responses to stream responses
             #     return Response(data_generator(response), mimetype='text/event-stream')
             
-            return f"{response}", 200 # non streaming responses
+            # return f"{response}", 200 # non streaming responses
+            return make_response(jsonify(response), 200)
         except openai.error.OpenAIError as e:
             # Handle OpenAI API errors
             error_message = str(e)
-            print(f"OpenAI API Error: {error_message}")
-            return jsonify({"error": error_message}), 500
+            app.logger.error(f"OpenAI API Error: {error_message}")
+            return make_response(jsonify({"error": error_message}), 500)
         except Exception as e:
             # Handle other unexpected errors
             error_message = str(e)
-            print(f"Unexpected Error: {error_message}")
-            return jsonify({"error": "An unexpected error occurred."}), 500
+            app.logger.error(f"Unexpected Error: {error_message}")
+            return make_response(jsonify({"error": "An unexpected error occurred."}), 500)

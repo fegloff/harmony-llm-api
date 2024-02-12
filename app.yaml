@@ -1,5 +1,5 @@
 runtime: python311
-service: llm-vector-backend
+service: llm-vector-backend-test
 entrypoint: gunicorn -b :$PORT main:app
 
 manual_scaling:

@@ -9,3 +9,6 @@ data/chroma_db
 .env.development
 .env.testing
 data/
+chroma/
+venv/
+uploads/

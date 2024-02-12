@@ -1,2 +1,9 @@
+from dotenv import load_dotenv, find_dotenv
+import logging
+import sys
+
 from .text_messages import EngMsg
-from .config import config
+from .llm_exceptions import InvalidCollectionName, PdfFileInvalidFormat, DatabaseError, InvalidCollection
+
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
